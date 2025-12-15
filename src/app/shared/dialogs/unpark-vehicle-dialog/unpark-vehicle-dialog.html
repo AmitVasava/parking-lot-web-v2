@@ -1,0 +1,136 @@
+<div class="rounded-xl bg-white p-6" style="width: 880px">
+  <!-- HEADER -->
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold leading-none">Unpark Vehicle</h2>
+
+    <button matIconButton mat-dialog-close class="sm !bg-gray-100" (click)="close()">
+      <mat-icon class="rounded-full !text-gray-600">close</mat-icon>
+    </button>
+  </div>
+
+  <div class="h-px w-full bg-gray-200 mb-4"></div>
+
+  <!-- 3 COLUMN GRID -->
+  <div class="dialog-grid-3col">
+    <!-- Spot Details -->
+    <div class="dialog-card">
+      <div class="dialog-header">
+        <h2 class="dialog-title">Spot Details</h2>
+        <div class="dialog-divider"></div>
+      </div>
+
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between">
+          <span class="text-gray-600">Floor</span>
+          <span class="font-semibold">{{ data.floorName }}</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span class="text-gray-600">Spot</span>
+          <span class="font-semibold">{{ data.spotName }}</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span class="text-gray-600">Vehicle Type</span>
+          <div class="flex items-center gap-1">
+            <mat-icon class="!text-base">{{ vehicleIcons[data.allowedType] }}</mat-icon>
+            <span class="font-semibold">{{ data.allowedType }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticket Details -->
+    <div class="dialog-card">
+      <div class="dialog-header">
+        <h2 class="dialog-title">Ticket Details</h2>
+        <div class="dialog-divider"></div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex justify-between">
+          <span class="text-gray-600">Ticket No</span>
+          <span class="font-semibold">{{ data.ticketNumber }}</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span class="text-gray-600">Driver</span>
+          <span class="font-semibold">{{ data.driverName }}</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span class="text-gray-600">Vehicle</span>
+          <span class="font-semibold">{{ data.vehicleNumber }}</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span class="text-gray-600">Parked At</span>
+          <span class="font-semibold">{{ data.parkedAt | formatDateTime}}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Price Breakdown -->
+    <div class="dialog-card-bordered text-sm">
+      <div class="dialog-header">
+        <h2 class="dialog-title">Price Breakdown</h2>
+        <div class="dialog-divider"></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-y-3">
+        <span class="text-gray-600">Rate</span>
+        <span class="font-semibold text-right">₹ {{ ratePerHour }}/hr</span>
+
+        <span class="text-gray-600">Duration</span>
+        <span class="font-semibold text-right">{{ durationMinutes }} mins</span>
+
+        <span class="text-gray-600">Base Amount</span>
+        <span class="font-semibold text-right">₹ {{ baseAmount }}</span>
+
+        <span class="text-gray-600">Tax (18%)</span>
+        <span class="font-semibold text-right">₹ {{ taxAmount }}</span>
+
+        <div class="border-t border-dashed border-gray-600 col-span-2"></div>
+
+        <span class="flex items-center text-gray-600">Total Amount</span>
+        <span class="text-blue-900 font-semibold text-right text-xl"> ₹ {{ amountToPay }} </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT TYPE – row -->
+  <div class="dialog-card-bordered mt-4 text-sm">
+    <div class="dialog-header">
+      <h2 class="dialog-title">Select Payment Type</h2>
+      <div class="dialog-divider"></div>
+    </div>
+
+    <div class="flex gap-3">
+      @for (option of paymentOptions; track option.value) {
+      <label
+        class="flex items-center flex-1 gap-3 p-3 rounded-lg border border-dashed border-gray-400 cursor-pointer transition hover:bg-blue-100"
+        [class.bg-gray-200]="paymentMethod === option.value"
+        [class.border-none]="paymentMethod === option.value"
+      >
+        <div class="flex items-center gap-3">
+          <img [src]="option.icon" class="h-9 w-9" />
+          <div>
+            <div class="font-semibold">{{ option.label }}</div>
+            <div class="text-gray-600">{{ option.sub }}</div>
+          </div>
+        </div>
+
+        <input type="radio" class="hidden" [value]="option.value" [(ngModel)]="paymentMethod" />
+      </label>
+      }
+    </div>
+  </div>
+
+  <div class="h-px w-full bg-gray-200 my-4"></div>
+
+  <!-- FOOTER -->
+  <div class="flex justify-end gap-3">
+    <button matButton class="text-gray-500" (click)="close()">Cancel</button>
+    <button matButton="filled" (click)="submit()">Unpark</button>
+  </div>
+</div>

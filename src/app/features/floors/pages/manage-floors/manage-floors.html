@@ -1,0 +1,35 @@
+<div class="flex items-center justify-between !mb-10">
+  <div class="flex items-center gap-3">
+    <img
+      [src]="'assets/icons/manage-floors.png'"
+      alt="icon"
+      class="h-9 w-9 object-contain text-2xl"
+    />
+    <h1 class="text-2xl font-bold">Manage Floors</h1>
+  </div>
+  <div class="flex justify-between items-center">
+    <button matButton="filled" class="flex items-center gap-2 small">Add Floor</button>
+  </div>
+</div>
+
+@for (floor of floors(); track floor.floorId) {
+
+<!-- FLOOR HEADER -->
+<div class="flex items-center justify-between mb-5 pb-3 mt-8 border-b border-gray-300">
+  <div class="flex justify-between items-center gap-3">
+    <h1 class="text-base font-semibold">{{ floor.floorName }}</h1>
+    <button matButton="filled" class="flex items-center gap-2 small">Add Spot</button>
+  </div>
+  <h1 class="text-xs text-gray-700 font-semibold ml-4">{{ floor.spots.length }} Spot</h1>
+</div>
+
+<!-- SPOTS GRID -->
+<div class="grid gap-6 grid-cols-[repeat(auto-fill,minmax(228px,1fr))]">
+  @for (spot of floor.spots; track spot.spotId) {
+  <spot-card [floor]="floor" [spot]="spot" [showActions]="false"></spot-card>
+
+  }
+</div>
+<!-- END SPOT GRID -->
+
+}

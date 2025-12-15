@@ -1,0 +1,95 @@
+<div class="rounded-xl bg-white p-5 shadow-sm flex flex-col h-[360px]">
+  <!-- HEADER -->
+  <div>
+    <div class="flex justify-between items-center">
+      <h1 class="text-xs font-medium text-gray-500 leading-tight">{{ floor.floorName }}</h1>
+
+      <span
+        class="inline-flex items-center rounded-xl px-2 py-1 text-xs leading-none"
+        [class.bg-green-100]="!spot.occupied"
+        [class.text-green-700]="!spot.occupied"
+        [class.bg-red-100]="spot.occupied"
+        [class.text-red-700]="spot.occupied"
+      >
+        {{ spot.occupied ? 'Occupied' : 'Available' }}
+      </span>
+    </div>
+
+    <h1 class="mt-1 text-base font-semibold text-gray-900">
+      {{ spot.spotName }}
+    </h1>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="h-px w-full bg-gray-200 my-3"></div>
+
+  <!-- SPOT DETAILS -->
+  <div class="text-xs">
+    <h2 class="mb-2 font-semibold text-gray-700">Spot Details</h2>
+
+    <div class="flex justify-between items-center">
+      <span class="text-gray-600">Allowed Vehicle</span>
+
+      <div class="flex items-center">
+        <mat-icon class="!text-base">{{ vehicleIcons[spot.allowedType] }}</mat-icon>
+        <span class="text-gray-900">{{ spot.allowedType }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="h-px w-full bg-gray-200 my-3"></div>
+
+  <!-- BODY -->
+  <div class="flex-grow overflow-y-auto pr-1">
+    @if (spot.occupied) {
+    <div class="text-xs">
+      <h2 class="mb-2 font-semibold text-gray-700">Ticket Details</h2>
+
+      <div class="space-y-2">
+        <!-- Ticket Number -->
+        <div class="flex justify-between">
+          <span class="text-gray-600">Ticket No.</span>
+          <span class="text-gray-900 text-right">
+            {{ ticket()?.ticketNumber }}
+          </span>
+        </div>
+
+        <!-- Driver Name -->
+        <div class="flex justify-between">
+          <span class="text-gray-600">Driver</span>
+          <span class="text-gray-900 text-right">
+            {{ ticket()?.driverName }}
+          </span>
+        </div>
+
+        <!-- Vehicle Number -->
+        <div class="flex justify-between">
+          <span class="text-gray-600">Vehicle</span>
+          <span class="text-gray-900 text-right">
+            {{ ticket()?.vehicleNumber }}
+          </span>
+        </div>
+
+        <!-- Parked At -->
+        <div class="flex justify-between">
+          <span class="text-gray-600">Parked At</span>
+          <span class="text-gray-900 text-right">
+            {{ ticket()?.parkedAt | formatDateTime }}
+          </span>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- FOOTER -->
+  @if (showActions) {
+  <div class="h-px w-full bg-gray-200 my-3"></div>
+
+  @if (spot.occupied) {
+  <button matButton="outlined" class="danger" (click)="onUnpark()">Unpark Vehicle</button>
+  } @else {
+  <button matButton="filled" (click)="onPark()">Park Vehicle</button>
+  } }
+</div>

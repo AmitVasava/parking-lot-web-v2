@@ -1,0 +1,15 @@
+<app-header class="z-10 relative" />
+
+<div class="h-[calc(100vh-64px)] overflow-hidden">
+  <mat-sidenav-container class="h-full">
+    <!-- SIDEBAR -->
+    <mat-sidenav mode="side" opened class="w-60 h-full overflow-y-auto">
+      <app-sidebar />
+    </mat-sidenav>
+
+    <!-- MAIN CONTENT -->
+    <mat-sidenav-content class="bg-gray-100 h-full overflow-y-auto p-6">
+      <router-outlet />
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

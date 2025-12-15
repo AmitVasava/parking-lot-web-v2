@@ -1,0 +1,278 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+@use 'tailwindcss';
+//@use '@ngxpert/hot-toast/styles';
+
+html {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: (
+        plain-family: 'Inter',
+        brand-family: 'Inter',
+        bold-weight: 600,
+        medium-weight: 500,
+        regular-weight: 400,
+      ),
+      density: 0,
+    )
+  );
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+
+  @include mat.dialog-overrides(
+    (
+      container-shape: 6px,
+    )
+  );
+
+  --mat-sys-body-large-size: 0.875rem;
+}
+
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.elevated {
+  box-shadow: var(--mat-sys-level2);
+}
+
+button[matButton] {
+  @include mat.button-overrides(
+    (
+      filled-container-shape: 6px,
+      outlined-container-shape: 6px,
+      text-container-shape: 6px,
+      protected-container-shape: 6px,
+      tonal-container-shape: 6px,
+      filled-horizontal-padding: 12px,
+      outlined-horizontal-padding: 12px,
+      text-horizontal-padding: 12px,
+      protected-horizontal-padding: 12px,
+      tonal-horizontal-padding: 12px,
+      filled-icon-spacing: 0px,
+      filled-icon-offset: 1px,
+      filled-container-height: 36px,
+      outlined-container-height: 36px,
+      text-container-height: 36px,
+      protected-container-height: 36px,
+      tonal-container-height: 36px,
+    )
+  );
+}
+
+button[matButton].small {
+  @include mat.button-overrides(
+    (
+      filled-container-height: 28px,
+      outlined-container-height: 28px,
+      text-container-height: 28px,
+      filled-horizontal-padding: 8px,
+      outlined-horizontal-padding: 8px,
+      text-horizontal-padding: 8px,
+      filled-label-text-size: 12px,
+      outlined-label-text-size: 12px,
+      text-label-text-size: 12px,
+    )
+  );
+}
+
+button[matButton='outlined'].danger {
+  @include mat.button-overrides(
+    (
+      outlined-label-text-color: var(--mat-sys-error),
+      outlined-outline-color: var(--mat-sys-error),
+      outlined-state-layer-color: var(--mat-sys-error),
+    )
+  );
+}
+
+button[matIconButton] {
+  @include mat.icon-button-overrides(
+    (
+      container-shape: 6px,
+    )
+  );
+}
+
+button[matIconButton].danger {
+  @include mat.icon-button-overrides(
+    (
+      icon-color: var(--mat-sys-error),
+      state-layer-color: var(--mat-sys-error),
+    )
+  );
+}
+
+button[matIconButton].small {
+  @include mat.icon-button-overrides(
+    (
+      icon-size: 24px,
+      touch-target-size: 28px,
+      state-layer-size: 28px,
+    )
+  );
+}
+
+mat-icon.small {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+button[matIconButton].sm {
+  @include mat.icon-button-overrides(
+    (
+      icon-size: 16px,
+      // allowed
+      touch-target-size: 28px,
+      // allowed
+      state-layer-size: 28px,
+      // allowed
+      container-shape: 6px // allowed,,,,,,,
+    )
+  );
+
+  /* Flex-center the icon manually, since we cannot use container-size token */
+  width: 28px !important;
+  height: 28px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 0 !important;
+}
+
+button[matIconButton].sm mat-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  line-height: 16px !important;
+}
+
+.danger {
+  color: var(--mat-sys-error);
+}
+
+mat-form-field {
+  @include mat.theme(
+    (
+      density: -4,
+    )
+  );
+
+  width: 100%;
+}
+
+mat-sidenav {
+  @include mat.sidenav-overrides(
+    (
+      container-width: 250px,
+      container-shape: 0px,
+      container-background-color: white,
+      container-divider-color: var(--mat-sys-outline-variant),
+    )
+  );
+
+  @include mat.list-overrides(
+    (
+      active-indicator-color: var(--mat-sys-primary),
+      active-indicator-shape: 6px,
+      list-item-one-line-container-height: 40px,
+    )
+  );
+}
+
+// Style to fix the weird border with angular material + tailwindcss
+.mdc-notched-outline__notch {
+  border-right: none !important;
+}
+
+//Responsive grid
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1rem;
+}
+
+.custom-dialog-panel .mat-mdc-dialog-surface {
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: none !important;
+  max-width: 100vw !important; /* Remove Angular Material's limit */
+  width: auto !important; /* Allow your internal width to work */
+  margin: auto !important;
+}
+
+.dialog-grid-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.dialog-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.dialog-grid-3col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.dialog-card {
+  @apply rounded-lg bg-gray-100 p-3 text-sm;
+}
+
+.dialog-card-bordered {
+  @apply rounded-lg border border-gray-400 p-3 text-sm;
+}
+
+.dialog-title {
+  @apply font-semibold text-base leading-none;
+}
+
+/* Wrapper that defines heading width (divider width = title width) */
+.dialog-header {
+  @apply inline-flex flex-col;
+  max-width: max-content;
+}
+
+/* Divider stays exactly under the heading */
+.dialog-divider {
+  @apply h-px bg-gray-600 mt-1 mb-4 w-full;
+}
