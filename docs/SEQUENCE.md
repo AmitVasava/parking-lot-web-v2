@@ -12,10 +12,7 @@ Currently completed:
 
 - ✅ Park Vehicle flow
 - ✅ Unpark Vehicle flow
-
-Pending:
-
-- ⏳ Invoice generation flow
+- ✅ Invoice Generation flow
 
 ---
 
@@ -43,8 +40,6 @@ The system:
 
 No invoice is generated during this flow.
 
----
-
 ### Sequence Diagram
 
 ```mermaid
@@ -64,16 +59,12 @@ sequenceDiagram
     Store -->> UI: Publish updated state
 ```
 
----
-
 ### Rules Enforced
 
 - A ticket is created **only once per parking session**
 - A spot **cannot be parked** if already occupied
 - Parking does **not** generate an invoice
 - Spot configuration is immutable during active parking
-
----
 
 ### State Transitions
 
@@ -95,9 +86,7 @@ The system:
 - Validates that an **active ticket exists**
 - Closes the **Ticket**
 - Marks the **Spot as Available**
-- Triggers invoice generation (handled in next flow)
-
----
+- Triggers invoice generation
 
 ### Sequence Diagram
 
@@ -118,16 +107,12 @@ sequenceDiagram
     Store -->> UI: Publish updated state
 ```
 
----
-
 ### Rules Enforced
 
 - Only **active tickets** can be unparked
 - A spot must be **occupied** to allow unpark
 - Ticket is closed **exactly once**
 - No spot remains occupied after unpark
-
----
 
 ### State Transitions
 
@@ -138,15 +123,58 @@ sequenceDiagram
 
 ---
 
-## 5. Pending Flows (Not Yet Defined)
+## 5. Invoice Generation Flow (LOCKED)
 
-The following flows are intentionally **not documented yet**:
+### Description
 
-- Invoice Generation
-- Invoice Download
-- Ticket & Invoice History
+After a vehicle is unparked, the system generates an invoice.
 
-These will be added **one flow at a time**, after validation.
+The system:
+
+- Calculates parking duration
+- Calculates payable amount
+- Creates an immutable Invoice
+- Stores Invoice permanently
+- Displays Invoice
+
+### Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant Store as ParkingLot Store
+    participant Domain as Domain Models
+    participant Dialog as Invoice Dialog
+    participant UI as Angular UI
+
+    Store ->> Domain: Calculate parking duration
+    Store ->> Domain: Calculate charges (base + tax)
+    Store ->> Domain: Create Invoice (immutable)
+    Store ->> Dialog: Open Invoice Dialog
+    Dialog -->> UI: Display Invoice
+```
+
+### Rules Enforced
+
+- Exactly **one Invoice per Ticket**
+- Invoice is generated **only once**
+- Invoice is **immutable**
+- Invoice does not affect Spot state
+
+### Financial Rules
+
+- Duration calculated in minutes
+- Partial hours rounded up
+- Fixed hourly rate (Phase A)
+- Fixed tax percentage
+- Total = Base + Tax
+
+### State Transitions
+
+| Entity  | Before    | Action           | After     |
+| ------- | --------- | ---------------- | --------- |
+| Ticket  | Closed    | Generate Invoice | Closed    |
+| Invoice | None      | Generate         | Generated |
+| Spot    | Available | None             | Available |
 
 ---
 
@@ -155,5 +183,4 @@ These will be added **one flow at a time**, after validation.
 - Behavior-first documentation
 - One flow locked at a time
 - Explicit state transitions
-- No UI or framework assumptions
 - Documentation is the source of truth
