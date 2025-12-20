@@ -1,15 +1,15 @@
-# Parking Lot – State Model (Phase A)
+# Parking Lot – State Model (Phase A – Park Vehicle Only)
 
 ## Purpose
 
-This document defines the **state transitions** for the Parking Lot system.
-It supports the already finalized **flows** and does not introduce new behavior.
+This document defines the **state transitions strictly required for the Park Vehicle flow**.
+It intentionally excludes future flows (Unpark, Invoice) to keep scope minimal and safe.
 
-Scope is intentionally minimal.
+This file will be **extended incrementally** as new flows are validated.
 
 ---
 
-## 1. Spot State Model
+## 1. ParkingSpot State Model
 
 ### States
 
@@ -27,19 +27,17 @@ Scope is intentionally minimal.
   - Vehicle is parked
   - Exactly one active ticket exists
 
-### Transitions
+### Transitions (Park Vehicle Only)
 
-| From      | Action         | To        |
-| --------- | -------------- | --------- |
-| Available | Park Vehicle   | Occupied  |
-| Occupied  | Unpark Vehicle | Available |
+| From      | Action       | To       |
+| --------- | ------------ | -------- |
+| Available | Park Vehicle | Occupied |
 
 ### Rules (Invariants)
 
 - A spot can have **at most one active ticket**
 - A spot **cannot be parked** if already Occupied
-- A spot **cannot be unparked** if already Available
-- Spot state changes only through Park / Unpark flows
+- Spot state changes **only through the Park Vehicle flow** (in this phase)
 
 ---
 
@@ -49,94 +47,55 @@ Scope is intentionally minimal.
 
 - None (implicit)
 - Active
-- Closed
 
 ### State Description
 
 - **None**
 
-  - No ticket exists for the spot
+  - No ticket exists
 
 - **Active**
-
   - Ticket created during Park Vehicle
-  - Vehicle is currently parked
+  - Represents an ongoing parking session
 
-- **Closed**
-  - Ticket closed during Unpark Vehicle
-  - Parking session completed
+### Transitions (Park Vehicle Only)
 
-### Transitions
-
-| From   | Action         | To     |
-| ------ | -------------- | ------ |
-| None   | Park Vehicle   | Active |
-| Active | Unpark Vehicle | Closed |
+| From | Action       | To     |
+| ---- | ------------ | ------ |
+| None | Park Vehicle | Active |
 
 ### Rules (Invariants)
 
-- A ticket is created **only during Park**
-- A ticket can be closed **only once**
-- A Closed ticket **cannot return** to Active
-- Each ticket belongs to exactly one Spot and Floor
+- A ticket is created **only during Park Vehicle**
+- A ticket can be **Active only once**
+- Each Active ticket belongs to **exactly one ParkingSpot**
 
 ---
 
-## 3. Invoice State Model
+## 3. Cross-Entity Consistency Rules
 
-### States
+These rules must **always hold true** during Park Vehicle:
 
-- None (implicit)
-- Generated
-
-### State Description
-
-- **None**
-
-  - No invoice exists for the ticket
-
-- **Generated**
-  - Invoice created after Unpark
-  - Invoice is immutable
-
-### Transitions
-
-| From | Action           | To        |
-| ---- | ---------------- | --------- |
-| None | Generate Invoice | Generated |
-
-### Rules (Invariants)
-
-- Exactly **one invoice per ticket**
-- Invoice is generated **only after ticket is Closed**
-- Invoice data **cannot be modified**
-- Invoice generation does not affect Spot state
+- A ParkingSpot is Occupied **iff** there exists an Active Ticket
+- An Active Ticket **must reference** an Occupied ParkingSpot
+- No partial state is allowed:
+  - Ticket creation and Spot occupation happen **together**
+  - Either both succeed or neither does
 
 ---
 
-## 4. Cross-Entity Consistency Rules
-
-These rules must always hold true:
-
-- Spot is Occupied **iff** there exists an Active Ticket
-- Ticket is Closed **iff** Invoice is Generated
-- No Invoice can exist without a Ticket
-- No Active Ticket can exist without an Occupied Spot
-
----
-
-## 5. Phase A Guarantees
+## Phase A (Park Vehicle) Guarantees
 
 - Deterministic state transitions
-- No cyclic lifecycles
-- No hidden or implicit states
-- Safe foundation for implementation
+- No unreachable states
+- No premature future assumptions
+- Safe, boring foundation for implementation
 
 ---
 
-## Out of Scope (Phase A)
+## Explicitly Out of Scope (This Phase)
 
-- Ticket re-opening
-- Spot deletion with historical tickets
-- Invoice regeneration
-- Refunds or adjustments
+- Unpark Vehicle flow
+- Ticket Closed state
+- Invoice generation
+- Pricing, payments, or timing rules
